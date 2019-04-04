@@ -239,7 +239,9 @@ function! s:ParseVals(start, end)
     if sepIdx > -1
       let key = s:StrTrim(line[0:sepIdx - 1])
       let val = s:StrTrim(line[sepIdx + 1:])
-      if val[:0] is# "$"
+      if val[0:1] is# '$('
+        let vals[key] = system(substitute(val, '^\$(\(.*\))$', '\1', ''))
+      elseif val[:0] is# '$'
         let vals[key] = expand(val)
       else
         let vals[key] = val
